@@ -1,0 +1,1 @@
+ /Users/macbookpro14/StudioProjects/first_project/.dart_tool/flutter_build/9b98fedbaf83eba2b8fa62bbeea171d2/native_assets.yaml: 

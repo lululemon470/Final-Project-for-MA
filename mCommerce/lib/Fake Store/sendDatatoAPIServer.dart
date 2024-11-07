@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() {
   runApp(SendData());
@@ -25,13 +27,30 @@ class _SendDataScreenState extends State<SendDataScreen> {
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
   final TextEditingController _controller3 = TextEditingController();
+  File? _image;
 
+  final ImagePicker _picker = ImagePicker();
+
+  // Function to pick an image
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  // Function to send data
   Future<void> sendData() async {
     try {
       String name = _controller.text;
       String price = _controller1.text;
       String category = _controller2.text;
       String description = _controller3.text;
+
+      // If there's an image, include the file path
+      String imagePath = _image != null ? _image!.path : 'default_image_path';
 
       // Wrap the body in an array
       List<Map<String, dynamic>> body = [
@@ -40,7 +59,7 @@ class _SendDataScreenState extends State<SendDataScreen> {
           'category': category,
           'price': double.parse(price),
           'description': description,
-          'image': 'picsum'
+          'image': imagePath // Include the image path
         }
       ];
 
@@ -65,14 +84,6 @@ class _SendDataScreenState extends State<SendDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            // Navigate back to the previous screen by popping the current route
-            Navigator.of(context).pop();
-          },
-        ),
-
         title: Text("Send Data to API"),
       ),
       body: Padding(
@@ -95,6 +106,15 @@ class _SendDataScreenState extends State<SendDataScreen> {
               controller: _controller3,
               decoration: InputDecoration(labelText: 'Enter product description'),
             ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _pickImage, // Open image picker
+              child: Text("Pick Image"),
+            ),
+            SizedBox(height: 10),
+            _image != null
+                ? Image.file(_image!) // Display the selected image
+                : Text("No image selected"),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: sendData,

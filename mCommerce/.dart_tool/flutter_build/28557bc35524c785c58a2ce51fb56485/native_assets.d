@@ -1,0 +1,1 @@
+ /Users/macbookpro14/Desktop/github/Final-Project-for-MA/mCommerce/.dart_tool/flutter_build/28557bc35524c785c58a2ce51fb56485/native_assets.yaml: 
